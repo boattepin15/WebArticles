@@ -303,4 +303,10 @@ router.post(
   HistoryStItemController.updateStetus
 );
 
+router.post(
+  '/getItemsByIds',
+  auth,
+  GetItem.getItemByIds
+)
+
 module.exports = router;

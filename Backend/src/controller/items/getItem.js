@@ -181,6 +181,29 @@ const getItemByLocat_Id = async (req, res) => {
     return res.status(500).send(err.message);
   }
 };
+
+const getItemByIds = async (req, res) => {
+  const { ids } = req.body;
+
+  try {
+    const Item = await Items.findAll({
+      where: { item_id: ids },
+      include: itemInclude,
+      order: [["item_id", "ASC"]],
+    });
+
+    if (Item) return res.send(Item);
+    else {
+      return res.status(404).send({
+        status: "404",
+        error: "Not Found",
+      });
+    }
+  } catch (err) {
+    return res.status(500).send(err.message);
+  }
+};
+
 module.exports = {
   getItemById: getItemById,
   getItemByCategoryID: getItemByCategoryID,
@@ -189,4 +212,5 @@ module.exports = {
   getItemByDpm_Id: getItemByDpm_Id,
   getItemByBud_Id: getItemByBud_Id,
   getItemByLocat_Id: getItemByLocat_Id,
+  getItemByIds: getItemByIds,
 };

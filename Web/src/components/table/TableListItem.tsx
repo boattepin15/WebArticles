@@ -22,6 +22,7 @@ import ModalDetails from "../modal/Details/ModalDetails";
 import PaginationItem from "./components/PaginationItem";
 // import ReactPaginate from "react-paginate";
 import { BsClipboard } from "react-icons/bs";
+import { useReactToPrint } from "react-to-print";
 import {
   chackStatusItem,
   chackStatusItemColor,
@@ -39,6 +40,11 @@ import { CSVLink } from "react-csv";
 import { SiMicrosoftexcel } from "react-icons/si";
 import ModalDownload from "../../pages/ApplicationDownload/components/ModalDownload";
 import Checkbox from "../Checkbox";
+import configAxios from "../../axios/configAxios";
+import axios from "axios";
+import { API } from "../../axios/swr/endpoint";
+import { ComponentToPrint } from "../print/ComponentToPrint";
+
 function TableListItem(props: any) {
   const { itemList, editPage, isPage } = props;
 
@@ -55,6 +61,7 @@ function TableListItem(props: any) {
 
   const [paginationCount, setPaginationCount] = useState<any>();
   const [itemListPaninat, setItemListPaninat] = useState<any>(itemList);
+  const componentRef = useRef();
   // console.log(itemListPaninat);
   // console.log(paginationCount);
 
@@ -67,6 +74,12 @@ function TableListItem(props: any) {
   // console.log(itemList)
   const [checkeds, setCheckeds] = useState<any>();
   const [checkedsAll, setCheckedsAll] = useState<boolean>(false);
+  const handlePrint = useReactToPrint({
+    documentTitle: "Print This Document",
+    onBeforePrint: () => console.log("before printing..."),
+    onAfterPrint: () => console.log("after printing..."),
+    removeAfterPrint: true,
+  });
   // console.log("isListPage = " + isListPage, " checkeds", checkeds);
   const [checkReset, setCheckReset] = useState<boolean>(true);
   useEffect(() => {
@@ -213,6 +226,7 @@ function TableListItem(props: any) {
   ];
 
   const [modalShowModalDownload, setModalShowModalDownload] = useState(false);
+
   return (
     <div className="mx-3">
       {modalShowModalDownload && (
@@ -480,17 +494,7 @@ function TableListItem(props: any) {
           )}
         </Card.Footer>
       </Card>
-      <Button
-        style={{ color: colors.black }}
-        className="m-2"
-        size="lg"
-        variant={"outline-primary"}
-        onClick={() => {
-          setModalShowAll(true);
-        }}
-      >
-        สั่งพิมพ์
-      </Button>
+      <ComponentToPrint checkedData={checkeds} />
       {dataItem && itemList && (
         <OverlayTrigger
           overlay={

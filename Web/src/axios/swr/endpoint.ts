@@ -24,6 +24,7 @@ export const API = {
   getLocationByBud_Id: baseURL + `/getLocationByBud_Id/`,
   getHistoryStatusItem: baseURL + `/getHistoryStatusItem/`,
   getTypeItemByDpmId: baseURL + `/getTypeItemByDpmId/`,
+  getItemsByIds: baseURL + `/getItemsByIds`,
 
   //POST
   createUser: baseURL + `/createUser`,
