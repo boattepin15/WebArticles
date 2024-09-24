@@ -1,30 +1,16 @@
 import React from "react";
-import moment from "moment";
+import moment from "../../libs/moment";
 
 const PrintableInventoryTable = ({ data }: { data: any[] }) => {
   return (
-    <div className="font-serif w-full text-sm p-1">
-      <table className="w-full border-collapse border border-gray-800">
+    <div className="font-serif w-full text-sm p-1 my-2">
+      <div className="text-center">
+        <div>รายการครุภัณฑ์ ประจำปีงบประมาณ {moment().add(543, "year").year()}</div>
+        <div>สาขาวิชาวิศวกรรมคอมพิวเตอร์ มหาวิทยาลัยเทคโนโลยีราชมงคลอีสาน วิทยาเขตขอนแก่น</div>
+        <div>ณ {moment().format('LL')}</div>
+      </div>
+      <table className="w-full border-collapse border">
         <thead>
-          <tr>
-            <th
-              className="border border-gray-800 font-bold text-center"
-              colSpan={12}
-            >
-              รายการครุภัณฑ์ ประจำปีงบประมาณ 2567
-            </th>
-          </tr>
-          <tr>
-            <th className="border border-gray-800 text-center" colSpan={12}>
-              สาขาวิชาวิศวกรรมคอมพิวเตอร์ มหาวิทยาลัยเทคโนโลยีราชมงคลอีสาน
-              วิทยาเขตขอนแก่น
-            </th>
-          </tr>
-          <tr>
-            <th className="border border-gray-800 text-center" colSpan={12}>
-              ณ วันที่ 30 กันยายน 2567
-            </th>
-          </tr>
           <tr>
             <th className="border text-center" rowSpan={2}>
               ที่
@@ -41,11 +27,15 @@ const PrintableInventoryTable = ({ data }: { data: any[] }) => {
             <th className="border text-center" rowSpan={2}>
               รายการ
             </th>
-            <th className="border text-center" rowSpan={2}>
-              จำนวน/หน่วยนับ
+            <th
+              className="border text-center"
+              style={{ whiteSpace: "pre-line" }}
+              rowSpan={2}
+            >
+              {`จำนวน /\nหน่วยนับ`}
             </th>
-            <th className="border text-center" rowSpan={2}>
-              ราคาต่อหน่วย
+            <th className="border text-center" style={{ whiteSpace: "pre-line" }} rowSpan={2}>
+              {`ราคาต่อ\nหน่วย`}
             </th>
             <th className="border text-center" rowSpan={2}>
               ราคารวม
@@ -53,8 +43,8 @@ const PrintableInventoryTable = ({ data }: { data: any[] }) => {
             <th className="border text-center" colSpan={2}>
               สภาพ
             </th>
-            <th className="border text-center" rowSpan={2}>
-              สถานที่เก็บ/ใช้งาน
+            <th className="border text-center" style={{ whiteSpace: "pre-line" }} rowSpan={2}>
+              {`สถานที่เก็บ/\nใช้งาน`}
             </th>
             <th className="border text-center" rowSpan={2}>
               หมายเหตุ
@@ -79,44 +69,44 @@ const PrintableInventoryTable = ({ data }: { data: any[] }) => {
                 </tr>
                 {item.list.map((itemData: any, indexData: number) => (
                   <tr key={indexData}>
-                    <td className="border border-gray-800">{indexData + 1}</td>
-                    <td className="border border-gray-800">
+                    <td className="border">{indexData + 1}</td>
+                    <td className="border">
                       {itemData.department}
                     </td>
-                    <td className="border border-gray-800">
-                      {moment(itemData.purchaseDate).format("DD/MM/YYYY")}
+                    <td className="border">
+                      {moment(itemData.purchaseDate).add(543, "year").format("DD/MM/YYYY")}
                     </td>
-                    <td className="border border-gray-800">
+                    <td className="border">
                       {itemData.inventoryNumber}
                     </td>
-                    <td className="border border-gray-800">
+                    <td className="border">
                       {itemData.name}
                     </td>
-                    <td className="border border-gray-800 text-center">
+                    <td className="border text-center">
                       {itemData.quantity} {itemData.unit}
                     </td>
-                    <td className="border border-gray-800 text-right">
+                    <td className="border text-right">
                       {itemData.unitPrice.toLocaleString("th-TH", {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,
                       })}
                     </td>
-                    <td className="border border-gray-800 text-right">
+                    <td className="border text-right">
                       {itemData.totalPrice.toLocaleString("th-TH", {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,
                       })}
                     </td>
-                    <td className="border border-gray-800 text-center">
+                    <td className="border text-center">
                       {itemData.condition ? "✓" : ""}
                     </td>
-                    <td className="border border-gray-800 text-center">
+                    <td className="border text-center">
                       {!itemData.condition ? "✓" : ""}
                     </td>
-                    <td className="border border-gray-800">
+                    <td className="border">
                       {itemData.location}
                     </td>
-                    <td className="border border-gray-800">{itemData.notes}</td>
+                    <td className="border">{itemData.notes}</td>
                   </tr>
                 ))}
               </>
