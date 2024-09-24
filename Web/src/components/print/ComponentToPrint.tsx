@@ -34,48 +34,46 @@ export const ComponentToPrint = ({ checkedData }: { checkedData: any }) => {
       })
     );
 
-    console.log(result);
-    //! this function will filter by same categories and list by code id
-    const orderFilterData = () => {
-      const { data } = result;
+    if (result.data.length === 0) {
+      return;
+    }
 
-      let categories = data.map((item: any) => {
-        return {
-          categoryName: item.category.name,
-          categoryId: item.category.cate_id,
-        };
-      });
+    console.log(result.data);
 
-      //filter only unique category id
-      categories = _.uniqBy(categories, "categoryId");
+    // filter by department first
+    const filterByDepartment = _.groupBy(result.data, "department.nameTH");
 
-      //loop by category and filter by category id
-      const filterData = categories.map((category: any) => {
-        const listData = data.filter(
-          (item: any) => item.category.cate_id === category.categoryId
-        );
+    const data = Object.keys(filterByDepartment).map((key) => {
+      return {
+        branch: key,
+        list: filterByDepartment[key].map((item: any) => {
+          return {
+            department: item.department.nameTH,
+            purchaseDate: item.createdAt,
+            name: item.name,
+            inventoryNumber: item.code,
+            quantity: item.typeitem.quantity,
+            unit: item.typeitem.unit,
+            unitPrice: item.typeitem.price_unit,
+            totalPrice: item.typeitem.total_price,
+            condition: item.status_item,
+            location: item.location.nameTH,
+            notes: item.description,
+          };
+        }),
+      };
+    });
 
-        return {
-          categories: category.categoryName,
-          count: listData.length,
-          listData: listData,
-        };
-      });
+    setData(data);
 
-      return filterData;
-    };
-
-    const filterData = orderFilterData();
-    await setData(filterData)
-
-    console.log(JSON.stringify(filterData));
-
-    handlePrint(null, () => contentToPrint.current);
+    setTimeout(() => {
+      handlePrint(null, () => contentToPrint.current);
+    }, 500);
   };
 
   return (
     <>
-      <div style={{ display: "", width:"100%" }} className="hidden">
+      <div style={{ display: "none", width: "100%" }} className="hidden">
         <div ref={contentToPrint}>
           <PrintableTable data={data} />
         </div>
