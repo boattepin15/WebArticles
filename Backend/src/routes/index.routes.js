@@ -309,4 +309,10 @@ router.post(
   GetItem.getItemByIds
 )
 
+router.post(
+  '/autoRecommendCode',
+  auth,
+  GetItem.autoRecommendCode
+)
+
 module.exports = router;

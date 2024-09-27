@@ -63,6 +63,10 @@ export const API = {
 
   // Block
   updateUserBlock: baseURL + `/updateUserBlock`,
+
+
+  // Auto Recommend Code
+  autoRecommendCode: baseURL + `/autoRecommendCode`,
 };
 
 /*
