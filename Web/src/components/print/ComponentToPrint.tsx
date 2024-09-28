@@ -73,7 +73,7 @@ export const ComponentToPrint = ({ checkedData }: { checkedData: any }) => {
 
   return (
     <>
-      <div style={{ display: "", width: "100%" }} className="hidden">
+      <div style={{ display: "none", width: "100%" }} className="hidden">
         <div ref={contentToPrint}>
           <PrintableTable data={data} />
         </div>
