@@ -1,10 +1,15 @@
 import _ from "lodash";
 import { useNavigate } from "react-router-dom";
 import { Table, Button, Card } from "react-bootstrap";
-import { AiFillEdit } from "react-icons/ai";
+import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import { GetKanitFont } from "../../config/fonts";
 import { useEffect, useState } from "react";
 import colors from "../../config/colors";
+import Swal from "sweetalert2";
+import axios from "axios";
+import configAxios from "../../axios/configAxios";
+import { API } from "../../axios/swr/endpoint";
+import checkToken from "../../config/checkToken";
 /*
 Faculty
 Department
@@ -18,6 +23,42 @@ function TableListLocat(props: any) {
 
   const navigatePage = (idItem?: any, item?: any) => {
     navigate(editPage, { state: { id: idItem, item: item } });
+  };
+
+  const handleDelete = async (id: any, name: string) => {
+    const result = await Swal.fire({
+      title: 'ยืนยันการลบ?',
+      text: `คุณต้องการลบ ${name} ใช่หรือไม่?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'ลบ',
+      cancelButtonText: 'ยกเลิก'
+    });
+
+    if (result.isConfirmed) {
+      try {
+        let deleteAPI = '';
+        if (isPage === "f") {
+          deleteAPI = API.deleteFaculty;
+        } else if (isPage === "d") {
+          deleteAPI = API.deleteDepartment;
+        } else if (isPage === "b") {
+          deleteAPI = API.deleteBuilding;
+        } else if (isPage === "l") {
+          deleteAPI = API.deleteLocation;
+        }
+        
+        const res = await axios(configAxios("post", deleteAPI, { id }));
+        if (res.data.status === 1) {
+          Swal.fire('สำเร็จ', 'ลบข้อมูลเรียบร้อยแล้ว', 'success');
+          window.location.reload();
+        }
+      } catch (error: any) {
+        checkToken(error.response?.data?.status, error.request?.status, navigate);
+      }
+    }
   };
 
   const [getProfile, setGetProfile] = useState<any>({});
@@ -85,25 +126,39 @@ function TableListLocat(props: any) {
               return (
                 <tr key={idx}>
                   <td>
-                    <Button
-                      variant="warning"
-                      onClick={() => {
-                        let getId: any;
-                        if (isPage === "f") {
-                          getId = item.f_id;
-                        } else if (isPage === "d") {
-                          getId = item.d_id;
-                        } else if (isPage === "b") {
-                          getId = item.b_id;
-                        } else if (isPage === "l") {
-                          getId = item.l_id;
-                        }
+                    <div className="d-flex gap-2 justify-content-center">
+                      <Button
+                        variant="warning"
+                        onClick={() => {
+                          let getId: any;
+                          if (isPage === "f") {
+                            getId = item.f_id;
+                          } else if (isPage === "d") {
+                            getId = item.d_id;
+                          } else if (isPage === "b") {
+                            getId = item.b_id;
+                          } else if (isPage === "l") {
+                            getId = item.l_id;
+                          }
 
-                        navigatePage(getId, item);
-                      }}
-                    >
-                      <AiFillEdit color={colors.black} size={20} />
-                    </Button>
+                          navigatePage(getId, item);
+                        }}
+                      >
+                        <AiFillEdit color={colors.black} size={20} />
+                      </Button>
+                      <Button
+                        variant="danger"
+                        onClick={() => handleDelete(
+                          isPage === "f" ? item.f_id : 
+                          isPage === "d" ? item.d_id : 
+                          isPage === "b" ? item.b_id : 
+                          item.l_id,
+                          item.nameTH
+                        )}
+                      >
+                        <AiFillDelete color={colors.white} size={20} />
+                      </Button>
+                    </div>
                   </td>
                   <td>{idx + 1}</td>
                   <td>{item.nameTH}</td>

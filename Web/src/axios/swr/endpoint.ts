@@ -47,6 +47,10 @@ export const API = {
   deleteImgItems: baseURL + `/deleteImgItems`,
   deleteTypeItem: baseURL + `/deleteTypeItem`,
   deleteImgItemsDamaged: baseURL + `/deleteImgItemsDamaged`,
+  deleteFaculty: baseURL + `/deleteFaculty`,
+  deleteDepartment: baseURL + `/deleteDepartment`, 
+  deleteBuilding: baseURL + `/deleteBuilding`,
+  deleteLocation: baseURL + `/deleteLocation`,
 
   //PUT
   updateUser: baseURL + `/updateUser/`,
