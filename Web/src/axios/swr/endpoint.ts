@@ -24,6 +24,7 @@ export const API = {
   getLocationByBud_Id: baseURL + `/getLocationByBud_Id/`,
   getHistoryStatusItem: baseURL + `/getHistoryStatusItem/`,
   getTypeItemByDpmId: baseURL + `/getTypeItemByDpmId/`,
+  getItemsByIds: baseURL + `/getItemsByIds`,
 
   //POST
   createUser: baseURL + `/createUser`,
@@ -46,6 +47,10 @@ export const API = {
   deleteImgItems: baseURL + `/deleteImgItems`,
   deleteTypeItem: baseURL + `/deleteTypeItem`,
   deleteImgItemsDamaged: baseURL + `/deleteImgItemsDamaged`,
+  deleteFaculty: baseURL + `/deleteFaculty`,
+  deleteDepartment: baseURL + `/deleteDepartment`, 
+  deleteBuilding: baseURL + `/deleteBuilding`,
+  deleteLocation: baseURL + `/deleteLocation`,
 
   //PUT
   updateUser: baseURL + `/updateUser/`,
@@ -62,6 +67,10 @@ export const API = {
 
   // Block
   updateUserBlock: baseURL + `/updateUserBlock`,
+
+
+  // Auto Recommend Code
+  autoRecommendCode: baseURL + `/autoRecommendCode`,
 };
 
 /*

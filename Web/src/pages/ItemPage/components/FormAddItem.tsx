@@ -1,5 +1,4 @@
-import axios from "axios";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { Button, Form, Container, Toast } from "react-bootstrap";
 import configAxios from "../../../axios/configAxios";
 import { API } from "../../../axios/swr/endpoint";
@@ -16,6 +15,8 @@ import {
 import { toLocaleStringEn } from "../../../config/number/formatEN";
 import colors from "../../../config/colors";
 import { IoMdHelpCircleOutline } from "react-icons/io";
+import axios from "axios";
+import { debounce } from "lodash";
 
 function FormAddItem(props: any) {
   const {
@@ -61,6 +62,33 @@ function FormAddItem(props: any) {
   const [description, setDescription] = useState<any>("");
   const [price, setPrice] = useState<any>(0);
   //
+
+  const [codeSuggestions, setCodeSuggestions] = useState<string[]>([]);
+
+  const debouncedFetchSuggestions = useCallback(
+    debounce(async (code: string) => {
+      if (code.length < 2) {
+        setCodeSuggestions([]);
+        setShowSuggestCode(false);
+        return;
+      }
+      try {
+        const response = await axios(
+          configAxios("post", API.autoRecommendCode, { code })
+        );
+        setCodeSuggestions(response.data);
+        if (response.data.length > 0) {
+          setShowSuggestCode(true);
+        } else {
+          setShowSuggestCode(false);
+        }
+      } catch (error) {
+        console.error("Error fetching code suggestions:", error);
+        setCodeSuggestions([]);
+      }
+    }, 500),
+    []
+  );
 
   // getFaculty
   useMemo(async () => {
@@ -154,6 +182,7 @@ function FormAddItem(props: any) {
   const handleChangeCode = (event: any) => {
     const name = event.target.value;
     setCodeItem(name);
+    debouncedFetchSuggestions(name);
   };
 
   const handleChangeStatus = (event: any) => {
@@ -176,6 +205,12 @@ function FormAddItem(props: any) {
     }
 
     setIdType(id);
+  };
+
+  const handleSelectSuggestion = (suggestion: string) => {
+    setCodeItem(suggestion);
+    setCodeSuggestions([]);
+    toggleShowSuggestCode();
   };
 
   // Image
@@ -285,6 +320,9 @@ function FormAddItem(props: any) {
   const [showA, setShowA] = useState(false);
   const toggleShowA = () => setShowA(!showA);
 
+  const [showSuggestCode, setShowSuggestCode] = useState(false);
+  const toggleShowSuggestCode = () => setShowSuggestCode(!showSuggestCode);
+
   return (
     <Container style={{ borderRadius: 15, width: "100%", height: "100%" }}>
       {/*  */}
@@ -347,13 +385,35 @@ function FormAddItem(props: any) {
           <Form.Control
             onClick={toggleShowA}
             size="lg"
-            // style={{ height: "3rem" }}
             type="text"
             placeholder="Code"
             value={codeItem}
             onChange={handleChangeCode}
           />
         </Form.Group>
+        <Toast show={showSuggestCode} className="mb-2" onClose={toggleShowSuggestCode}>
+          <Toast.Header>
+            <strong className="me-auto">
+              รหัสครุภัณฑ์ที่คล้ายกัน
+            </strong>
+          </Toast.Header>
+          <Toast.Body>
+            <div className="d-flex flex-wrap">
+             {_.map(codeSuggestions, (item: any, idx) => {
+              return (
+                <>
+                  <div
+                    key={idx}
+                    className="suggestion-item"
+                    onClick={() => handleSelectSuggestion(item)}
+                  >
+                    {item}
+                  </div>
+                </>
+              )})}
+            </div>
+          </Toast.Body>
+        </Toast>
         <Toast show={showA} onClose={toggleShowA}>
           <Toast.Header>
             <strong className="me-auto">คำอัตโนมัติ</strong>

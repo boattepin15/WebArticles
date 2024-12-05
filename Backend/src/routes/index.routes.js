@@ -303,4 +303,16 @@ router.post(
   HistoryStItemController.updateStetus
 );
 
+router.post(
+  '/getItemsByIds',
+  auth,
+  GetItem.getItemByIds
+)
+
+router.post(
+  '/autoRecommendCode',
+  auth,
+  GetItem.autoRecommendCode
+)
+
 module.exports = router;

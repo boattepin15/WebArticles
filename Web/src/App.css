@@ -53,3 +53,19 @@
     font-size: 35px;
   }
 }
+
+.text-center {
+  text-align: center;
+}
+
+.text-sm{
+  font-size: 9px;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.my-2 {
+  margin: 10px 0;
+}
